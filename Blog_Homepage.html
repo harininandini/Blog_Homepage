@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ThinkWrite – Blog</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; background: #fffef9; color: #1a1209; }
+
+    nav {
+      border-bottom: 1px solid #e8e0d0; padding: 18px 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: #fffef9; position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 1.5rem; font-weight: bold; font-style: italic; }
+    .logo span { color: #dc2626; }
+    .nav-links { display: flex; gap: 24px; font-family: 'Segoe UI', sans-serif; }
+    .nav-links a { color: #555; text-decoration: none; font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .nav-links a:hover { color: #dc2626; }
+
+    .hero {
+      background: #1a1209; color: white;
+      padding: 70px 60px; text-align: center;
+    }
+    .hero .issue { color: #ef4444; font-family: 'Segoe UI', sans-serif; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: normal; font-style: italic; line-height: 1.2; max-width: 700px; margin: 0 auto; }
+    .hero .byline { color: #9ca3af; margin-top: 16px; font-family: 'Segoe UI', sans-serif; font-size: 0.85rem; }
+    .hero-btn {
+      display: inline-block; margin-top: 28px;
+      background: #dc2626; color: white;
+      padding: 12px 28px; border-radius: 4px;
+      text-decoration: none; font-family: 'Segoe UI', sans-serif;
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em;
+    }
+
+    .categories {
+      display: flex; gap: 0; overflow-x: auto;
+      border-bottom: 2px solid #1a1209; font-family: 'Segoe UI', sans-serif;
+    }
+    .cat-link {
+      padding: 12px 24px; color: #555; text-decoration: none;
+      font-size: 0.82rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; white-space: nowrap;
+      border-right: 1px solid #e8e0d0; transition: all 0.2s;
+    }
+    .cat-link:hover, .cat-link.active { background: #1a1209; color: white; }
+
+    .main-grid {
+      max-width: 1100px; margin: 0 auto; padding: 48px 40px;
+      display: grid; grid-template-columns: 1fr 320px; gap: 48px;
+    }
+
+    .post-list { display: flex; flex-direction: column; gap: 0; }
+
+    .post-card {
+      display: grid; grid-template-columns: 1fr 180px;
+      gap: 20px; padding: 28px 0;
+      border-bottom: 1px solid #e8e0d0; align-items: start;
+    }
+    .post-card:first-child { border-top: 1px solid #e8e0d0; }
+    .post-meta { font-family: 'Segoe UI', sans-serif; font-size: 0.72rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .post-meta .cat { color: #dc2626; font-weight: 700; margin-right: 10px; }
+    .post-card h2 { font-size: 1.2rem; line-height: 1.4; margin-bottom: 8px; }
+    .post-card h2 a { text-decoration: none; color: #1a1209; }
+    .post-card h2 a:hover { color: #dc2626; }
+    .post-excerpt { color: #6b5d4f; font-size: 0.88rem; line-height: 1.7; }
+    .post-footer { display: flex; align-items: center; gap: 12px; margin-top: 14px; font-family: 'Segoe UI', sans-serif; }
+    .author-chip { font-size: 0.78rem; color: #555; font-weight: 600; }
+    .read-time { font-size: 0.75rem; color: #9ca3af; }
+    .post-thumb {
+      border-radius: 6px; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; flex-shrink: 0;
+    }
+    .bg-a { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .bg-b { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+    .bg-c { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .bg-d { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+    .bg-e { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+
+    .sidebar { font-family: 'Segoe UI', sans-serif; }
+    .sidebar-widget { margin-bottom: 36px; }
+    .widget-title {
+      font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.12em; color: #1a1209;
+      border-bottom: 2px solid #1a1209; padding-bottom: 8px; margin-bottom: 16px;
+    }
+    .subscribe-box { background: #1a1209; color: white; padding: 24px; border-radius: 8px; text-align: center; }
+    .subscribe-box p { font-size: 0.85rem; color: #d4c9bb; margin-bottom: 14px; line-height: 1.6; }
+    .subscribe-box input { width: 100%; padding: 9px 12px; border-radius: 4px; border: none; font-size: 0.85rem; margin-bottom: 8px; }
+    .subscribe-box button { width: 100%; padding: 9px; background: #dc2626; color: white; border: none; border-radius: 4px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+
+    .topic-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .topic-tag { background: #f3ede2; color: #1a1209; padding: 6px 12px; border-radius: 4px; font-size: 0.78rem; text-decoration: none; font-weight: 600; }
+    .topic-tag:hover { background: #1a1209; color: white; }
+
+    .popular-post { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+    .rank { font-size: 1.4rem; font-weight: 900; color: #e8e0d0; line-height: 1; }
+    .pop-title { font-size: 0.85rem; font-weight: 600; color: #1a1209; line-height: 1.4; }
+    .pop-meta { font-size: 0.72rem; color: #9ca3af; margin-top: 4px; }
+
+    footer {
+      background: #1a1209; color: #6b5d4f; text-align: center; padding: 28px;
+      font-family: 'Segoe UI', sans-serif; font-size: 0.82rem;
+    }
+    footer em { color: #dc2626; font-style: normal; }
+
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .hero { padding: 40px 20px; }
+      .main-grid { grid-template-columns: 1fr; padding: 24px 20px; }
+      .post-card { grid-template-columns: 1fr; }
+      .post-thumb { width: 100%; height: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Think<span>Write</span></div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Tech</a>
+    <a href="#">Life</a>
+    <a href="#">About</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="issue">🗞️ Weekly Edition · June 2025</div>
+  <h1>Ideas worth reading, every single week</h1>
+  <p class="byline">by Alex Johnson · 3,200 subscribers</p>
+  <a href="#" class="hero-btn">Subscribe Free</a>
+</div>
+
+<div class="categories">
+  <a href="#" class="cat-link active">All</a>
+  <a href="#" class="cat-link">Technology</a>
+  <a href="#" class="cat-link">Lifestyle</a>
+  <a href="#" class="cat-link">Career</a>
+  <a href="#" class="cat-link">Science</a>
+  <a href="#" class="cat-link">Design</a>
+</div>
+
+<div class="main-grid">
+  <div class="post-list">
+
+    <div class="post-card">
+      <div>
+        <div class="post-meta"><span class="cat">Technology</span> Jun 15, 2025</div>
+        <h2><a href="#">Why AI tools won't replace critical thinkers — they'll amplify them</a></h2>
+        <p class="post-excerpt">The panic around AI replacing jobs misses the bigger point: the people who thrive won't be those who avoid AI, but those who use it to think bigger and move faster...</p>
+        <div class="post-footer">
+          <span class="author-chip">✍️ Alex Johnson</span>
+          <span class="read-time">· 6 min read</span>
+        </div>
+      </div>
+      <div class="post-thumb bg-a">🤖</div>
+    </div>
+
+    <div class="post-card">
+      <div>
+        <div class="post-meta"><span class="cat">Career</span> Jun 10, 2025</div>
+        <h2><a href="#">The quiet habits of people who always seem to have time</a></h2>
+        <p class="post-excerpt">Productivity isn't about doing more. It's about protecting what matters. Here's what I've noticed about people who accomplish great things without burning out...</p>
+        <div class="post-footer">
+          <span class="author-chip">✍️ Alex Johnson</span>
+          <span class="read-time">· 4 min read</span>
+        </div>
+      </div>
+      <div class="post-thumb bg-b">⏰</div>
+    </div>
+
+    <div class="post-card">
+      <div>
+        <div class="post-meta"><span class="cat">Design</span> Jun 5, 2025</div>
+        <h2><a href="#">What good design actually means in 2025</a></h2>
+        <p class="post-excerpt">We've been obsessed with aesthetics for too long. Real design solves real problems — and the best designers today are the ones who deeply understand people...</p>
+        <div class="post-footer">
+          <span class="author-chip">✍️ Alex Johnson</span>
+          <span class="read-time">· 5 min read</span>
+        </div>
+      </div>
+      <div class="post-thumb bg-c">🎨</div>
+    </div>
+
+    <div class="post-card">
+      <div>
+        <div class="post-meta"><span class="cat">Lifestyle</span> May 28, 2025</div>
+        <h2><a href="#">My year of reading 52 books — what actually changed</a></h2>
+        <p class="post-excerpt">I set out to read a book a week. I made it to 47. Here's what I learned: the books that stayed with me weren't the famous ones, they were the unexpected ones...</p>
+        <div class="post-footer">
+          <span class="author-chip">✍️ Alex Johnson</span>
+          <span class="read-time">· 7 min read</span>
+        </div>
+      </div>
+      <div class="post-thumb bg-d">📚</div>
+    </div>
+
+    <div class="post-card">
+      <div>
+        <div class="post-meta"><span class="cat">Science</span> May 20, 2025</div>
+        <h2><a href="#">The science of sleep that most people still get wrong</a></h2>
+        <p class="post-excerpt">8 hours is a myth. Chronotypes are real. And your phone isn't the only thing ruining your rest. A look at what the latest sleep research actually tells us...</p>
+        <div class="post-footer">
+          <span class="author-chip">✍️ Alex Johnson</span>
+          <span class="read-time">· 5 min read</span>
+        </div>
+      </div>
+      <div class="post-thumb bg-e">😴</div>
+    </div>
+
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-widget">
+      <div class="widget-title">Newsletter</div>
+      <div class="subscribe-box">
+        <p>Get the best articles delivered to your inbox every week.</p>
+        <input type="email" placeholder="your@email.com"/>
+        <button>Subscribe →</button>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="widget-title">Popular This Week</div>
+      <div class="popular-post"><span class="rank">01</span><div><div class="pop-title">Why AI tools won't replace critical thinkers</div><div class="pop-meta">6 min read · Technology</div></div></div>
+      <div class="popular-post"><span class="rank">02</span><div><div class="pop-title">The quiet habits of people who always seem to have time</div><div class="pop-meta">4 min read · Career</div></div></div>
+      <div class="popular-post"><span class="rank">03</span><div><div class="pop-title">My year of reading 52 books</div><div class="pop-meta">7 min read · Lifestyle</div></div></div>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="widget-title">Browse Topics</div>
+      <div class="topic-tags">
+        <a href="#" class="topic-tag">Technology</a>
+        <a href="#" class="topic-tag">Career</a>
+        <a href="#" class="topic-tag">Design</a>
+        <a href="#" class="topic-tag">Lifestyle</a>
+        <a href="#" class="topic-tag">Science</a>
+        <a href="#" class="topic-tag">Books</a>
+        <a href="#" class="topic-tag">Productivity</a>
+        <a href="#" class="topic-tag">Mindset</a>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <p>&copy; 2025 <em>ThinkWrite</em> · Built with HTML & CSS · All articles by Alex Johnson</p>
+</footer>
+
+</body>
+</html>
